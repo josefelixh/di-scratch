@@ -3,7 +3,7 @@ package di.scratch.component
 import di.scratch.domain.User
 
 trait UserRepositoryComponent {
-  val userRepository: UserRepository
+  lazy val userRepository: UserRepository = new DefaultUserRepository
 
   trait UserRepository {
     def findAll: List[User]
