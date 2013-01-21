@@ -1,8 +1,7 @@
 package di.scratch.context
 
-import di.scratch.component.impl.UserRepositoryComponentImpl
-import di.scratch.component.UserServiceComponent
+import di.scratch.component._
 
 object DevContext extends 
-  UserRepositoryComponentImpl with
+  UserRepositoryComponent with
   UserServiceComponent
