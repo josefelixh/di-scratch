@@ -29,7 +29,7 @@ trait HackerDetectorImpl extends HackerDetector {
   val register: SIGNIN_FAILURE => SIGNIN_FAILURE = { signinFailure =>
     failures.filterNot { inWindow }.keys.toList.foreach { failures.remove }
     failures.get(signinFailure.time) map { currentList =>
-      failures.update(signinFailure.time, signinFailure :: currentList)
+      failures.update(signinFailure.time, signinFailure :: currentList.sortBy(_.time) take (failureThresold - 1))
     } getOrElse (failures.put(signinFailure.time, signinFailure :: Nil))
     signinFailure
   }
