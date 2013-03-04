@@ -1,11 +1,15 @@
 package jose.hackerdetector
 
+import di.scratch.context.Context
+
+case class SIGNIN_FAILURE(ip: String, time: Int, user: String)
+
 trait HackerDetector {
   def parseLine(line: String): String
 }
-trait HackerDetectorImpl extends HackerDetector {
+trait HackerDetectorImpl extends HackerDetector with Context {
   
-  case class SIGNIN_FAILURE(ip: String, time: Int, user: String)
+  val lineParser = context.lineParser
   
   val window = 5 * 60 //5 minutes in seconds 
   val failureThresold = 5
@@ -14,7 +18,7 @@ trait HackerDetectorImpl extends HackerDetector {
   def failuresWindow = failures.keys.toList.sorted
   def failuresInWindow = failures.values.flatten
   
-  override def parseLine(line: String) = parse (line) map { failure =>
+  override def parseLine(line: String) = lineParser.parse(line) map { failure =>
     purgeFailuresNotInWindow(failure.time)
     register(failure)
     if (suspicious(failure)) {
@@ -49,11 +53,11 @@ trait HackerDetectorImpl extends HackerDetector {
     failuresInWindow.filter(_.ip == failure.ip).size == failureThresold 
   }
   
-  val parse: String => Option[SIGNIN_FAILURE] = _ split (",") match {
-      case x if notValid(x) => throw new IllegalArgumentException
-      case Array(ip, failureTime, "SIGNIN_FAILURE", user) => Some(SIGNIN_FAILURE(ip, failureTime.toInt, user))
-      case _ => None
-  }
-  
-  val notValid: Array[_] => Boolean = _.length != 4
+//  val parse: String => Option[SIGNIN_FAILURE] = _ split (",") match {
+//      case x if notValid(x) => throw new IllegalArgumentException
+//      case Array(ip, failureTime, "SIGNIN_FAILURE", user) => Some(SIGNIN_FAILURE(ip, failureTime.toInt, user))
+//      case _ => None
+//  }
+//  
+//  val notValid: Array[_] => Boolean = _.length != 4
 }

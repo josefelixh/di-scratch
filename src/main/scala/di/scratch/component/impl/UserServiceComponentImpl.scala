@@ -5,9 +5,9 @@ import di.scratch.component.UserRepositoryComponent
 
 trait UserServiceComponentImpl extends UserServiceComponent {
   this: UserRepositoryComponent =>
-    override lazy val userService = new UserServiceImpl
     
-    class UserServiceImpl extends UserService {
+    trait UserServiceImpl extends UserService {
       override def findAll = userRepository.findAll
     }
+    
 }

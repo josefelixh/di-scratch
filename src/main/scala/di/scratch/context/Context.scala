@@ -9,7 +9,8 @@ case object Prod extends Environment
 case object Dev extends Environment
 
 trait Context {
-  lazy val context = resolveContext
+  lazy val context: DefaultContext = resolveContext
+  
   def resolveContext(implicit env: Environment) = {
     env match {
       case Prod => ProdContext
