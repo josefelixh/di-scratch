@@ -8,13 +8,9 @@ import di.scratch.context.Context
 trait UnitTestContext {
   this: Context =>
     
-  override lazy val context = UTContext
-  
-  object UTContext extends DefaultContext with MockitoSugar {
+  override lazy val context = new DefaultContext with MockitoSugar {
     
       override lazy val lineParser = mock[LineParser]
       
   }
-
-  
 }

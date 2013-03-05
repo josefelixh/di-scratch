@@ -52,12 +52,5 @@ trait HackerDetectorImpl extends HackerDetector with Context {
   val suspicious: SIGNIN_FAILURE => Boolean = { failure =>
     failuresInWindow.filter(_.ip == failure.ip).size == failureThresold 
   }
-  
-//  val parse: String => Option[SIGNIN_FAILURE] = _ split (",") match {
-//      case x if notValid(x) => throw new IllegalArgumentException
-//      case Array(ip, failureTime, "SIGNIN_FAILURE", user) => Some(SIGNIN_FAILURE(ip, failureTime.toInt, user))
-//      case _ => None
-//  }
-//  
-//  val notValid: Array[_] => Boolean = _.length != 4
+
 }

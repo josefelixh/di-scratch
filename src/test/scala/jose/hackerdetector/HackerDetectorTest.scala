@@ -10,10 +10,10 @@ import jose.hackerdetector.context.UnitTestContext
 class HackerDetectorTest extends FlatSpec with ShouldMatchers {
 
   "The HackerDetector" should "not return suspicious ip (normal activity)" in new HackerDetectorImpl with UnitTestContext {
-    val testData = for (host <- 1 to 254) yield s"192.168.0.$host,$host,SIGNIN_FAILURE,John Moore"
-    
-    testData.zipWithIndex.foreach { case (line, i) =>
-      when(context.lineParser.parse(line)).thenReturn(Some(SIGNIN_FAILURE(s"192.168.0.$i", i, "Badger Snake")))
+    val testData = for (host <- 1 to 254) yield {
+      val line = s"192.168.0.$host,$host,SIGNIN_FAILURE,John Moore"
+      when(context.lineParser.parse(line)).thenReturn(Some(SIGNIN_FAILURE(s"192.168.0.$host", host, "Badger Snake")))
+      line
     }
     
     testData.par foreach {
@@ -36,28 +36,15 @@ class HackerDetectorTest extends FlatSpec with ShouldMatchers {
     parseLine(line2) should be === null
   }
 
-  it should "throw IllegalArgumentException if entry is invalid" in new HackerDetectorImpl with UnitTestContext {
-    when(context.lineParser.parse("Hello World!")).thenThrow(new IllegalArgumentException)
-    evaluating { parseLine("Hello World!") } should produce [IllegalArgumentException]
-    
-    when(context.lineParser.parse("127.0.0.1,invalid,SIGNIN_FAILURE,John Moore")).thenThrow(new IllegalArgumentException)
-    evaluating { parseLine("127.0.0.1,invalid,SIGNIN_FAILURE,John Moore") } should produce [IllegalArgumentException]
-  }
-  
   it should "purge redundant failures" in new HackerDetectorImpl with UnitTestContext {
     val line = "a line"
     stub(context.lineParser.parse(line)).toReturn(Some(SIGNIN_FAILURE("192.168.0.1", 150, "Username")))
-    
-    (1 to failureThresold - 1).foreach { i =>
-      parseLine(line) should be === null
-    }
+    (1 to failureThresold - 1).foreach { _ => parseLine(line) should be === null }
     
     parseLine(line) should be === "192.168.0.1"
-      
     failures(150).size should be === 4
     
     parseLine(line) should be === "192.168.0.1"
-      
     failures(150).size should be === 4
   }
 }
