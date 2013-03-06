@@ -9,7 +9,7 @@ import jose.hackerdetector.SIGNIN_FAILURE
 
 class LineParserComponentImplSpec extends FlatSpec with ShouldMatchers {
   
-  trait UnderTest extends LineParserComponentImpl {
+  sealed trait UnderTest extends LineParserComponentImpl {
     override val lineParser = new LineParserImpl
   } 
 
