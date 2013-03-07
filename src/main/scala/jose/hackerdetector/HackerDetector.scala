@@ -21,7 +21,7 @@ trait HackerDetectorImpl extends HackerDetector with Context {
     } else null
   } getOrElse(null)
   
-  val suspicious: SIGNIN_FAILURE => Boolean = { failure =>
+  private val suspicious: SIGNIN_FAILURE => Boolean = { failure =>
     failuresRegister.failuresInWindow.filter(_.ip == failure.ip).size == failuresRegister.failureThresold 
   }
 
