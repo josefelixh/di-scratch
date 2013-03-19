@@ -12,6 +12,8 @@ trait HackerDetectorImpl extends HackerDetector with Context {
   private val lineParser = context.lineParser
   private val failuresRegister = context.failuresRegister
   
+  val failureThresold = 5
+  
   override def parseLine(line: String) = lineParser.parse(line) map { failure =>
     failuresRegister.purgeFailuresNotInWindow(failure.time)
     failuresRegister.register(failure)
@@ -22,7 +24,7 @@ trait HackerDetectorImpl extends HackerDetector with Context {
   } getOrElse(null)
   
   private val suspicious: SIGNIN_FAILURE => Boolean = { failure =>
-    failuresRegister.failuresInWindow.filter(_.ip == failure.ip).size == failuresRegister.failureThresold 
+    failuresRegister.failuresInWindow.filter(_.ip == failure.ip).size == failureThresold 
   }
 
 }

@@ -6,8 +6,7 @@ import di.scratch.context.DefaultContext
 import di.scratch.context.Context
 import org.mockito.Mockito
 
-trait UnitTestContext {
-  this: Context =>
+trait UnitTestContext extends Context {
     
   override lazy val context = new DefaultContext with MockitoSugar {
     

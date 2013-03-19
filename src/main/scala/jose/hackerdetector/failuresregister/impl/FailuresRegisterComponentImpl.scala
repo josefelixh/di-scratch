@@ -8,7 +8,6 @@ trait FailuresRegisterComponentImpl extends FailuresRegisterComponent {
   trait FailuresRegisterImpl extends FailuresRegister {
 
     val window = 5 * 60 //5 minutes in seconds 
-    val failureThresold = 5
 
     val failures = collection.concurrent.TrieMap.empty[Int, List[SIGNIN_FAILURE]]
     def failuresWindow = failures.keys.toList.sorted

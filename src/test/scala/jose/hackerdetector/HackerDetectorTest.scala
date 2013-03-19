@@ -14,7 +14,6 @@ class HackerDetectorTest extends FlatSpec with ShouldMatchers {
 
     stub(context.lineParser.parse("a failure")).toReturn(parsedFailure)
     stub(context.lineParser.parse("a success")).toReturn(parsedSuccess)
-    stub(context.failuresRegister.failureThresold).toReturn(failureThresold)
     stub(context.failuresRegister.failuresInWindow).toReturn(normalTrafficWindow)
 
     (1 to 10) foreach { failure =>
@@ -32,7 +31,6 @@ class HackerDetectorTest extends FlatSpec with ShouldMatchers {
 
     stub(context.lineParser.parse("a failure")).toReturn(parsedFailure)
     stub(context.lineParser.parse("another failure")).toReturn(anotherParsedFailure)
-    stub(context.failuresRegister.failureThresold).toReturn(failureThresold)
     stub(context.failuresRegister.failuresInWindow).toReturn(hackerTrafficWindow)
 
     parseLine("a failure") should be === parsedFailure.get.ip
@@ -42,8 +40,6 @@ class HackerDetectorTest extends FlatSpec with ShouldMatchers {
   }
 
   trait TestData {
-
-    val failureThresold = 5
 
     val parsedFailure = Some(SIGNIN_FAILURE("192.168.0.1", 701, "Badger"))
     val anotherParsedFailure = Some(SIGNIN_FAILURE("192.168.0.2", 701, "Badger"))

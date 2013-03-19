@@ -12,7 +12,6 @@ trait FailuresRegisterComponent {
     def purgeFailuresNotInWindow(time: Int): Unit
     def purgeRedundantFailures(ip: String): Unit
     def failuresInWindow: Iterable[SIGNIN_FAILURE]
-    def failureThresold: Int
   }
 
 }
