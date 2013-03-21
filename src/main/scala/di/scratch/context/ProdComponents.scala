@@ -3,7 +3,7 @@ package di.scratch.context
 import di.scratch.component.impl._
 import jose.hackerdetector.lineparser.LineParserComponent
 
-object ProdContext extends DefaultContext with
+object ProdComponents extends DefaultComponents with 
   UserRepositoryComponentImpl with
   UserServiceComponentImpl {
   

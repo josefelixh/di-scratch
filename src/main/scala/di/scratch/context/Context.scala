@@ -7,15 +7,29 @@ import di.scratch.Application._
 sealed trait Environment
 case object Prod extends Environment
 case object Dev extends Environment
+case object Default extends Environment
+
+object ContextConfig {
+  
+  val components = Map[Environment, DefaultComponents](
+      Prod -> ProdComponents,
+      Dev -> DevComponents
+    ).withDefault(_ => new DefaultComponents{})
+  
+  val environments = Map[String, Environment](
+    "prod" -> Prod,
+    "dev" -> Dev
+  ).withDefault(_ => Default)
+}
 
 trait Context {
-  lazy val context: DefaultContext = resolveContext
+  import ContextConfig._
   
-  def resolveContext(implicit env: Environment) = {
-    env match {
-      case Prod => ProdContext
-      case Dev => DevContext
-    }
-  }
+  val environmentProperty = System.getProperty("env", "not-set").toLowerCase()
+  
+  val environment = environments(environmentProperty)
+  
+  lazy val component = components(environment)
+  
 }
 

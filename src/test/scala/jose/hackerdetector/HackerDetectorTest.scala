@@ -12,31 +12,31 @@ class HackerDetectorTest extends FlatSpec with ShouldMatchers {
   "The HackerDetector" should "not return suspicious ip (normal activity)" in new HackerDetectorImpl
     with UnitTestContext with TestData {
 
-    stub(context.lineParser.parse("a failure")).toReturn(parsedFailure)
-    stub(context.lineParser.parse("a success")).toReturn(parsedSuccess)
-    stub(context.failuresRegister.failuresInWindow).toReturn(normalTrafficWindow)
+    stub(component.lineParser.parse("a failure")).toReturn(parsedFailure)
+    stub(component.lineParser.parse("a success")).toReturn(parsedSuccess)
+    stub(component.failuresRegister.failuresInWindow).toReturn(normalTrafficWindow)
 
     (1 to 10) foreach { failure =>
       parseLine("a failure") should be === null
       parseLine("a success") should be === null
     }
 
-    verify(context.failuresRegister, times(10)).purgeFailuresNotInWindow(parsedFailure.get.time)
-    verify(context.failuresRegister, times(10)).register(parsedFailure.get)
+    verify(component.failuresRegister, times(10)).purgeFailuresNotInWindow(parsedFailure.get.time)
+    verify(component.failuresRegister, times(10)).register(parsedFailure.get)
 
   }
 
   it should "return suspicious ip (more than n failures within x minutes)" in new HackerDetectorImpl
     with UnitTestContext with TestData {
 
-    stub(context.lineParser.parse("a failure")).toReturn(parsedFailure)
-    stub(context.lineParser.parse("another failure")).toReturn(anotherParsedFailure)
-    stub(context.failuresRegister.failuresInWindow).toReturn(hackerTrafficWindow)
+    stub(component.lineParser.parse("a failure")).toReturn(parsedFailure)
+    stub(component.lineParser.parse("another failure")).toReturn(anotherParsedFailure)
+    stub(component.failuresRegister.failuresInWindow).toReturn(hackerTrafficWindow)
 
     parseLine("a failure") should be === parsedFailure.get.ip
     parseLine("another failure") should be === null
     
-    verify(context.failuresRegister).purgeRedundantFailures(parsedFailure.get.ip)
+    verify(component.failuresRegister).purgeRedundantFailures(parsedFailure.get.ip)
   }
 
   trait TestData {
