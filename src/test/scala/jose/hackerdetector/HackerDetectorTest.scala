@@ -6,6 +6,7 @@ import jose.hackerdetector.context.UnitTestContext
 import org.mockito.Mockito._
 import org.mockito.Matchers._
 import jose.hackerdetector.context.UnitTestContext
+import scala.language.reflectiveCalls
 
 class HackerDetectorTest extends FlatSpec with ShouldMatchers {
 

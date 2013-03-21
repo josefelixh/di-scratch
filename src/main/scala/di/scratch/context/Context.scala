@@ -32,4 +32,3 @@ trait Context {
   lazy val component = components(environment)
   
 }
-
